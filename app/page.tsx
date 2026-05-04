@@ -1,11 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Globe, BarChart3, Zap, TrendingUp, Shield, MessageSquare, AlertCircle, Check, X } from 'lucide-react'
 
 export default function Home() {
   const [email, setEmail] = useState('')
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('section')
+    sections.forEach((s) => s.classList.add('fade-section'))
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.08 }
+    )
+    sections.forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
+  }, [])
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
   const handleGetDemo = async (e: React.FormEvent) => {
